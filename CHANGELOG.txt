@@ -1,0 +1,52 @@
+CHANGELOG
+
+v1:
+- İlk çalışan sürüm.
+- Görev ekleme, silme, tamamlama ve localStorage.
+
+v2:
+- Ders listesi genişletildi.
+- Topic / ünite seçimi eklendi.
+- Koyu mod, demo görevleri, akıllı sıralama ve dışa aktarma gibi özellikler eklendi.
+
+v3:
+- Dosya isimlendirme v3 formatına alındı.
+- HL/SL seçimi eklendi.
+- CAS, TOK, EE, SAT, AP ve Other seviyesiz bırakıldı.
+- Language ab initio SL only olarak ayarlandı.
+- Matematik dersleri Math AA HL/SL gibi ayrı ayrı değil, ders + seviye şeklinde düzenlendi.
+- Etiketler eklendi.
+- Alt adımlar / checklist eklendi.
+- Tekrar eden görevler eklendi.
+- Yıldızlı görevler eklendi.
+- Günlük çalışma hedefi eklendi.
+- Bugün ve yakın tarih paneli eklendi.
+- Seviye filtresi eklendi.
+
+
+v4:
+- Dosya isimlendirme v4 formatına alındı.
+- Tarih alanının yanına saat alanı eklendi.
+- Yeni görevlerde tarih ve saat otomatik olarak mevcut gün ve saate ayarlanıyor.
+- Alt adımların tamamı bitince ana görev otomatik tamamlanıyor.
+- Ana görev tamamlanınca tüm alt adımlar tamamlanmış sayılıyor.
+- Alt adımlardan biri geri alınırsa ana görev tekrar devam eden duruma dönüyor.
+- Zaman bilgisi görev kartlarında ve yakın tarih panelinde gösteriliyor.
+- Footer daha doğal hale getirildi.
+- Tasarımda arka plan, kartlar, hover davranışları ve görsel hiyerarşi rötuşlandı.
+
+
+v5:
+- Bugün ve Yakın Tarih panelindeki gelecek gün kartlarında yıl kaldırıldı.
+- Tarihler artık 17 Haziran gibi ay adı ve gün şeklinde gösteriliyor.
+
+
+v6:
+- Son Dakika Modu eklendi.
+- Kendine Güven Puanı eklendi.
+- Görev bazlı IB Load Score eklendi.
+- Bugünün Savaş Planı paneli geliştirildi.
+- Sınav Geri Sayımı sistemi eklendi.
+- Sınavlar görevlerden ayrı localStorage alanında tutuluyor.
+- Dışa aktarma artık sınav verilerini de içeriyor.
+- Eski v5 görevleri v6 formatına otomatik taşınır.

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ExamWeek Planner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Sınav Haftası Görev Takibi</p>
+        <h1>ExamWeek Planner</h1>
+        <p class="subtitle">
+          Sınav haftasındaki çalışma yükünü ders, seviye, konu, alt adım ve zaman planına göre düzenle.
+          Planın cihazında saklanır; hesap açmadan kullanılabilir.
+        </p>
+      </div>
+
+      <div class="hero-actions">
+        <button id="themeToggle" class="secondary-btn" type="button">Koyu Mod</button>
+        <button id="loadDemo" class="secondary-btn" type="button">Demo Görevleri Ekle</button>
+        <button id="panicToggle" class="panic-btn" type="button">Son Dakika Modu</button>
+      </div>
+    </header>
+
+    <section class="dashboard" aria-label="Özet bilgiler">
+      <article class="stat-card primary-stat">
+        <span>Genel İlerleme</span>
+        <strong id="progressText">0%</strong>
+        <div class="progress-bar">
+          <div id="progressFill"></div>
+        </div>
+        <small id="taskStats">0 görev / 0 tamamlandı</small>
+      </article>
+
+      <article class="stat-card">
+        <span>Bugünkü Plan</span>
+        <strong id="todayTime">0 dk</strong>
+        <small id="dailyTargetText">Hedef: 120 dk</small>
+        <div class="progress-bar mini-progress">
+          <div id="dailyTargetFill"></div>
+        </div>
+      </article>
+
+      <article class="stat-card workload-card">
+        <span>Yük Skoru</span>
+        <strong id="loadScoreText">0/100</strong>
+        <div class="progress-bar mini-progress">
+          <div id="loadScoreFill"></div>
+        </div>
+        <small id="loadScoreHint">Plan bekliyor.</small>
+      </article>
+
+      <article class="stat-card">
+        <span>Kalan Süre</span>
+        <strong id="remainingTime">0 dk</strong>
+        <small>Tamamlanmamış görevlerin toplam tahmini süresi</small>
+      </article>
+
+      <article class="stat-card">
+        <span>Acil / Önemli</span>
+        <strong id="urgentCount">0</strong>
+        <small>Bugün, gecikmiş, yıldızlı, düşük güvenli veya yüksek öncelikli görevler</small>
+      </article>
+    </section>
+
+    <section class="panel compact-settings">
+      <div class="settings-row">
+        <div>
+          <h2>Çalışma Ayarı</h2>
+          <p class="section-note">Bugünkü çalışma yükünü kontrol etmek için hedef süre belirle.</p>
+        </div>
+        <div class="form-group target-input">
+          <label for="dailyTarget">Günlük hedef</label>
+          <select id="dailyTarget">
+            <option value="60">1 saat</option>
+            <option value="90">1 saat 30 dk</option>
+            <option value="120">2 saat</option>
+            <option value="180">3 saat</option>
+            <option value="240">4 saat</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <h2 id="formTitle">Yeni Görev Ekle</h2>
+          <p class="section-note">
+            Seviye alanı yalnızca HL/SL kullanılan derslerde açılır; core çalışmalar ayrı tutulur.
+          </p>
+        </div>
+        <button id="cancelEdit" class="ghost-btn hidden" type="button">Düzenlemeyi İptal Et</button>
+      </div>
+
+      <form id="taskForm" class="task-form">
+        <div class="form-group">
+          <label for="subject">Ders</label>
+          <select id="subject" required></select>
+        </div>
+
+        <div id="levelGroup" class="form-group hidden">
+          <label for="level">Seviye</label>
+          <select id="level"></select>
+        </div>
+
+        <div class="form-group">
+          <label for="topic">Ünite / Topic</label>
+          <select id="topic" required></select>
+        </div>
+
+        <div class="form-group wide">
+          <label for="taskInput">Görev</label>
+          <input id="taskInput" type="text" placeholder="Örn: Topic 2 soru çöz" required maxlength="120" />
+        </div>
+
+        <div class="form-group">
+          <label for="taskType">Görev Türü</label>
+          <select id="taskType">
+            <option value="Revision">Tekrar</option>
+            <option value="Practice">Soru çözümü</option>
+            <option value="Past Paper">Past paper</option>
+            <option value="Essay">Essay / yazı</option>
+            <option value="Project">Proje</option>
+            <option value="Reading">Okuma</option>
+            <option value="Flashcards">Flashcards</option>
+            <option value="IA/EE Work">IA / EE çalışması</option>
+            <option value="Other">Diğer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="priority">Öncelik</label>
+          <select id="priority" required>
+            <option value="high">Yüksek</option>
+            <option value="medium">Orta</option>
+            <option value="low">Düşük</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="confidence">Kendine Güven</label>
+          <select id="confidence">
+            <option value="1">1 - Çok düşük</option>
+            <option value="2">2 - Düşük</option>
+            <option value="3" selected>3 - Orta</option>
+            <option value="4">4 - İyi</option>
+            <option value="5">5 - Çok iyi</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="dueDate">Tarih</label>
+          <input id="dueDate" type="date" />
+        </div>
+
+        <div class="form-group">
+          <label for="dueTime">Saat</label>
+          <input id="dueTime" type="time" />
+        </div>
+
+        <div class="form-group">
+          <label for="estimate">Süre</label>
+          <select id="estimate">
+            <option value="15">15 dk</option>
+            <option value="30" selected>30 dk</option>
+            <option value="45">45 dk</option>
+            <option value="60">1 saat</option>
+            <option value="90">1 saat 30 dk</option>
+            <option value="120">2 saat</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="recurrence">Tekrar</label>
+          <select id="recurrence">
+            <option value="none">Tekrarsız</option>
+            <option value="daily">Her gün</option>
+            <option value="weekly">Haftalık</option>
+          </select>
+        </div>
+
+        <div class="form-group check-line">
+          <label for="starred">Önemli</label>
+          <label class="checkbox-label">
+            <input id="starred" type="checkbox" />
+            Yıldızla
+          </label>
+        </div>
+
+        <div class="form-group wide">
+          <label for="tags">Etiketler</label>
+          <input id="tags" type="text" placeholder="Örn: mock, paper2, formula" maxlength="120" />
+        </div>
+
+        <div class="form-group notes-field">
+          <label for="steps">Alt adımlar</label>
+          <textarea id="steps" rows="3" maxlength="360" placeholder="Her satıra bir adım yaz. Örn:
+Özet çıkar
+10 soru çöz
+Yanlışları kontrol et"></textarea>
+        </div>
+
+        <div class="form-group notes-field">
+          <label for="notes">Not</label>
+          <textarea id="notes" rows="3" maxlength="240" placeholder="Opsiyonel: sayfa aralığı, kaynak, özel not..."></textarea>
+        </div>
+
+        <button id="submitTask" type="submit">Görev Ekle</button>
+      </form>
+    </section>
+
+    <section class="control-panel">
+      <div class="search-row">
+        <div class="form-group search-box">
+          <label for="searchInput">Arama</label>
+          <input id="searchInput" type="search" placeholder="Ders, konu, görev, etiket veya not ara" />
+        </div>
+
+        <div class="form-group">
+          <label for="subjectFilter">Ders filtresi</label>
+          <select id="subjectFilter"></select>
+        </div>
+
+        <div class="form-group">
+          <label for="levelFilter">Seviye filtresi</label>
+          <select id="levelFilter">
+            <option value="all">Tüm seviyeler</option>
+            <option value="HL">HL</option>
+            <option value="SL">SL</option>
+            <option value="none">Seviyesiz</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="priorityFilter">Öncelik filtresi</label>
+          <select id="priorityFilter">
+            <option value="all">Tüm öncelikler</option>
+            <option value="high">Yüksek</option>
+            <option value="medium">Orta</option>
+            <option value="low">Düşük</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="sortSelect">Sıralama</label>
+          <select id="sortSelect">
+            <option value="smart">Akıllı sıralama</option>
+            <option value="due">Tarihe göre</option>
+            <option value="priority">Önceliğe göre</option>
+            <option value="subject">Derse göre</option>
+            <option value="created">Eklenme zamanına göre</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button class="filter-btn active" data-filter="all" type="button">Tümü</button>
+        <button class="filter-btn" data-filter="active" type="button">Devam Eden</button>
+        <button class="filter-btn" data-filter="completed" type="button">Tamamlanan</button>
+        <button class="filter-btn" data-filter="today" type="button">Bugün</button>
+        <button class="filter-btn" data-filter="overdue" type="button">Geciken</button>
+        <button class="filter-btn" data-filter="starred" type="button">Yıldızlı</button>
+        <button class="filter-btn" data-filter="recurring" type="button">Tekrarlı</button>
+
+        <span class="toolbar-spacer"></span>
+
+        <button id="exportData" class="secondary-btn" type="button">Dışa Aktar</button>
+        <button id="importData" class="secondary-btn" type="button">İçe Aktar</button>
+        <button id="printSummary" class="secondary-btn" type="button">Yazdır</button>
+        <button id="clearCompleted" class="danger-light" type="button">Tamamlananları Sil</button>
+        <button id="resetAll" class="danger-light" type="button">Tümünü Sıfırla</button>
+        <input id="importFile" class="hidden" type="file" accept="application/json" />
+      </div>
+    </section>
+
+    <section class="grid-area">
+      <aside class="panel smart-panel">
+        <h2>Bugünün Savaş Planı</h2>
+        <p class="section-note">Gecikme, sınav yakınlığı, güven puanı ve yük skoruna göre seçilen ilk görevler.</p>
+        <div id="battleSummary" class="battle-summary">Plan bekliyor.</div>
+        <ol id="smartPlan" class="smart-list"></ol>
+      </aside>
+
+      <aside class="panel subject-panel">
+        <h2>Ders Bazlı İlerleme</h2>
+        <div id="subjectBreakdown" class="subject-breakdown"></div>
+      </aside>
+    </section>
+
+    <section class="panel exam-panel">
+      <div class="section-title">
+        <div>
+          <h2>Sınav Geri Sayımı</h2>
+          <p class="section-note">Sınavları ayrı ekle; görev önceliklendirmesi bu tarihlere göre daha akıllı çalışır.</p>
+        </div>
+      </div>
+
+      <form id="examForm" class="exam-form">
+        <div class="form-group">
+          <label for="examSubject">Ders</label>
+          <select id="examSubject" required></select>
+        </div>
+
+        <div id="examLevelGroup" class="form-group hidden">
+          <label for="examLevel">Seviye</label>
+          <select id="examLevel"></select>
+        </div>
+
+        <div class="form-group wide">
+          <label for="examName">Sınav adı</label>
+          <input id="examName" type="text" placeholder="Örn: Physics Mock / Paper 2" maxlength="90" required />
+        </div>
+
+        <div class="form-group">
+          <label for="examDate">Tarih</label>
+          <input id="examDate" type="date" required />
+        </div>
+
+        <div class="form-group">
+          <label for="examTime">Saat</label>
+          <input id="examTime" type="time" />
+        </div>
+
+        <button type="submit">Sınav Ekle</button>
+      </form>
+
+      <div id="examCards" class="exam-grid"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Bugün ve Yakın Tarih</h2>
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <section class="panel">
+      <div class="list-header">
+        <div>
+          <h2>Görevler</h2>
+          <p id="resultInfo" class="section-note">Filtrelenen görevler burada görünür.</p>
+        </div>
+        <span id="emptyHint">Henüz görev yok.</span>
+      </div>
+
+      <ul id="taskList" class="task-list"></ul>
+    </section>
+
+    <footer class="footer">
+      <p>
+        ExamWeek Planner · Planını düzenle, önceliğini gör, ilerlemeni takip et.
+      </p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

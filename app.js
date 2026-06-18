@@ -1,9 +1,9 @@
-const STORAGE_KEY = "examweekPlannerTasksV6";
-const LEGACY_TASK_KEYS = ["examweekPlannerTasksV5", "examweekPlannerTasksV4", "examweekPlannerTasksV3", "examweekTasks"];
-const EXAM_STORAGE_KEY = "examweekPlannerExamsV6";
-const LEGACY_EXAM_KEYS = ["examweekPlannerExamsV5"];
-const THEME_KEY = "examweekPlannerThemeV6";
-const TARGET_KEY = "examweekPlannerDailyTargetV6";
+const STORAGE_KEY = "examweekPlannerTasksV7";
+const LEGACY_TASK_KEYS = ["examweekPlannerTasksV6", "examweekPlannerTasksV5", "examweekPlannerTasksV4", "examweekPlannerTasksV3", "examweekTasks"];
+const EXAM_STORAGE_KEY = "examweekPlannerExamsV7";
+const LEGACY_EXAM_KEYS = ["examweekPlannerExamsV6", "examweekPlannerExamsV5"];
+const THEME_KEY = "examweekPlannerThemeV7";
+const TARGET_KEY = "examweekPlannerDailyTargetV7";
 
 const subjectConfig = {
   "Physics": {
@@ -166,6 +166,11 @@ const elements = {
   confidenceInput: document.getElementById("confidence"),
   dueDateInput: document.getElementById("dueDate"),
   dueTimeInput: document.getElementById("dueTime"),
+  dueDay: document.getElementById("dueDay"),
+  dueMonth: document.getElementById("dueMonth"),
+  dueYear: document.getElementById("dueYear"),
+  dueHour: document.getElementById("dueHour"),
+  dueMinute: document.getElementById("dueMinute"),
   estimateInput: document.getElementById("estimate"),
   recurrenceInput: document.getElementById("recurrence"),
   starredInput: document.getElementById("starred"),
@@ -207,6 +212,11 @@ const elements = {
   examName: document.getElementById("examName"),
   examDate: document.getElementById("examDate"),
   examTime: document.getElementById("examTime"),
+  examDay: document.getElementById("examDay"),
+  examMonth: document.getElementById("examMonth"),
+  examYear: document.getElementById("examYear"),
+  examHour: document.getElementById("examHour"),
+  examMinute: document.getElementById("examMinute"),
   examCards: document.getElementById("examCards"),
   themeToggle: document.getElementById("themeToggle"),
   loadDemo: document.getElementById("loadDemo"),
@@ -242,18 +252,150 @@ function getLocalTimeString(date = new Date()) {
   return `${hours}:${minutes}`;
 }
 
+const MONTH_NAMES_TR = [
+  "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+  "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+];
+
 function formatShortTurkishDate(dateString) {
-  const monthNames = [
-    "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
-    "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
-  ];
   const [year, month, day] = dateString.split("-").map(Number);
-  return `${day} ${monthNames[month - 1]}`;
+  return `${day} ${MONTH_NAMES_TR[month - 1]}`;
+}
+
+function getDateTimeControlSet(kind) {
+  if (kind === "exam") {
+    return {
+      dateInput: elements.examDate,
+      timeInput: elements.examTime,
+      day: elements.examDay,
+      month: elements.examMonth,
+      year: elements.examYear,
+      hour: elements.examHour,
+      minute: elements.examMinute
+    };
+  }
+
+  return {
+    dateInput: elements.dueDateInput,
+    timeInput: elements.dueTimeInput,
+    day: elements.dueDay,
+    month: elements.dueMonth,
+    year: elements.dueYear,
+    hour: elements.dueHour,
+    minute: elements.dueMinute
+  };
+}
+
+function fillSelect(select, items) {
+  select.innerHTML = "";
+  items.forEach(item => {
+    const option = document.createElement("option");
+    option.value = item.value;
+    option.textContent = item.label;
+    select.appendChild(option);
+  });
+}
+
+function daysInMonth(year, month) {
+  return new Date(year, month, 0).getDate();
+}
+
+function updateDayOptions(kind) {
+  const controls = getDateTimeControlSet(kind);
+  const previousDay = Number(controls.day.value || 1);
+  const year = Number(controls.year.value || new Date().getFullYear());
+  const month = Number(controls.month.value || 1);
+  const maxDay = daysInMonth(year, month);
+
+  fillSelect(
+    controls.day,
+    Array.from({ length: maxDay }, (_, index) => ({
+      value: String(index + 1).padStart(2, "0"),
+      label: String(index + 1).padStart(2, "0")
+    }))
+  );
+
+  controls.day.value = String(Math.min(previousDay, maxDay)).padStart(2, "0");
+}
+
+function syncHiddenDateTime(kind) {
+  const controls = getDateTimeControlSet(kind);
+  updateDayOptions(kind);
+
+  const day = controls.day.value;
+  const month = controls.month.value;
+  const year = controls.year.value;
+  const hour = controls.hour.value || "00";
+  const minute = controls.minute.value || "00";
+
+  controls.dateInput.value = `${year}-${month}-${day}`;
+  controls.timeInput.value = `${hour}:${minute}`;
+}
+
+function setupDateTimeControls(kind) {
+  const controls = getDateTimeControlSet(kind);
+  const currentYear = new Date().getFullYear();
+
+  fillSelect(
+    controls.month,
+    MONTH_NAMES_TR.map((name, index) => ({
+      value: String(index + 1).padStart(2, "0"),
+      label: name
+    }))
+  );
+
+  fillSelect(
+    controls.year,
+    Array.from({ length: 7 }, (_, index) => {
+      const year = currentYear + index;
+      return { value: String(year), label: String(year) };
+    })
+  );
+
+  fillSelect(
+    controls.hour,
+    Array.from({ length: 24 }, (_, index) => ({
+      value: String(index).padStart(2, "0"),
+      label: String(index).padStart(2, "0")
+    }))
+  );
+
+  fillSelect(
+    controls.minute,
+    Array.from({ length: 60 }, (_, index) => ({
+      value: String(index).padStart(2, "0"),
+      label: String(index).padStart(2, "0")
+    }))
+  );
+
+  ["change", "input"].forEach(eventName => {
+    controls.day.addEventListener(eventName, () => syncHiddenDateTime(kind));
+    controls.month.addEventListener(eventName, () => syncHiddenDateTime(kind));
+    controls.year.addEventListener(eventName, () => syncHiddenDateTime(kind));
+    controls.hour.addEventListener(eventName, () => syncHiddenDateTime(kind));
+    controls.minute.addEventListener(eventName, () => syncHiddenDateTime(kind));
+  });
+}
+
+function setDateTimeFields(kind, dateString = getLocalDateString(), timeString = getLocalTimeString()) {
+  const controls = getDateTimeControlSet(kind);
+  const safeDate = /^\d{4}-\d{2}-\d{2}$/.test(dateString) ? dateString : getLocalDateString();
+  const safeTime = /^\d{2}:\d{2}$/.test(timeString) ? timeString : getLocalTimeString();
+
+  const [year, month, day] = safeDate.split("-");
+  const [hour, minute] = safeTime.split(":");
+
+  controls.year.value = year;
+  controls.month.value = month;
+  updateDayOptions(kind);
+  controls.day.value = day;
+  controls.hour.value = hour;
+  controls.minute.value = minute;
+  syncHiddenDateTime(kind);
 }
 
 function setCurrentDateTimeDefaults() {
-  elements.dueDateInput.value = getLocalDateString();
-  elements.dueTimeInput.value = getLocalTimeString();
+  setDateTimeFields("due", getLocalDateString(), getLocalTimeString());
 }
 
 function addDays(days, baseDateString = getLocalDateString()) {
@@ -1157,8 +1299,7 @@ function startEdit(id) {
   elements.taskTypeInput.value = task.taskType;
   elements.priorityInput.value = task.priority;
   elements.confidenceInput.value = String(task.confidence || 3);
-  elements.dueDateInput.value = task.dueDate;
-  elements.dueTimeInput.value = task.dueTime || "";
+  setDateTimeFields("due", task.dueDate || getLocalDateString(), task.dueTime || getLocalTimeString());
   elements.estimateInput.value = String(task.estimate);
   elements.recurrenceInput.value = task.recurrence;
   elements.starredInput.checked = task.starred;
@@ -1334,7 +1475,7 @@ function addDemoTasks() {
 
 function exportTasks() {
   const data = {
-    app: "ExamWeek Planner v6",
+    app: "ExamWeek Planner v7",
     exportedAt: new Date().toISOString(),
     tasks,
     exams
@@ -1344,7 +1485,7 @@ function exportTasks() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `examweek-planner-v6-${getLocalDateString()}.json`;
+  link.download = `examweek-planner-v7-${getLocalDateString()}.json`;
   link.click();
   URL.revokeObjectURL(url);
 }
@@ -1395,6 +1536,7 @@ elements.examSubject.addEventListener("change", () => {
 
 elements.examForm.addEventListener("submit", event => {
   event.preventDefault();
+  syncHiddenDateTime("exam");
 
   const subject = elements.examSubject.value;
   const config = subjectConfig[subject] || { level: "none" };
@@ -1418,8 +1560,7 @@ elements.examForm.addEventListener("submit", event => {
   exams.unshift(exam);
   saveExams();
   elements.examForm.reset();
-  elements.examDate.value = addDays(1);
-  elements.examTime.value = "09:00";
+  setDateTimeFields("exam", addDays(1), "09:00");
   updateExamLevelOptions("");
   renderTasks();
 });
@@ -1442,6 +1583,7 @@ elements.panicToggle.addEventListener("click", () => {
 
 elements.taskForm.addEventListener("submit", event => {
   event.preventDefault();
+  syncHiddenDateTime("due");
 
   const data = getFormData();
   if (!data.subject || !data.topic || !data.title) return;
@@ -1622,9 +1764,10 @@ populateSubjects();
 updateLevelOptions("");
 updateExamLevelOptions("");
 populateTopics("");
+setupDateTimeControls("due");
+setupDateTimeControls("exam");
 applyTheme(localStorage.getItem(THEME_KEY) || "light");
 elements.dailyTarget.value = localStorage.getItem(TARGET_KEY) || "120";
 setCurrentDateTimeDefaults();
-elements.examDate.value = addDays(1);
-elements.examTime.value = "09:00";
+setDateTimeFields("exam", addDays(1), "09:00");
 renderTasks();

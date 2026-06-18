@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ExamWeek Planner</title>
+  <title>ExamWeek Planner v7</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,7 +11,7 @@
     <header class="hero">
       <div class="hero-copy">
         <p class="eyebrow">Sınav Haftası Görev Takibi</p>
-        <h1>ExamWeek Planner</h1>
+        <h1>ExamWeek Planner v7</h1>
         <p class="subtitle">
           Sınav haftasındaki çalışma yükünü ders, seviye, konu, alt adım ve zaman planına göre düzenle.
           Planın cihazında saklanır; hesap açmadan kullanılabilir.
@@ -153,13 +153,23 @@
         </div>
 
         <div class="form-group">
-          <label for="dueDate">Tarih</label>
-          <input id="dueDate" type="date" />
+          <label for="dueDay">Tarih</label>
+          <input id="dueDate" type="hidden" />
+          <div class="date-parts" aria-label="Görev tarihi">
+            <select id="dueDay" aria-label="Gün"></select>
+            <select id="dueMonth" aria-label="Ay"></select>
+            <select id="dueYear" aria-label="Yıl"></select>
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="dueTime">Saat</label>
-          <input id="dueTime" type="time" />
+          <label for="dueHour">Saat</label>
+          <input id="dueTime" type="hidden" />
+          <div class="time-parts" aria-label="Görev saati">
+            <select id="dueHour" aria-label="Saat"></select>
+            <span>:</span>
+            <select id="dueMinute" aria-label="Dakika"></select>
+          </div>
         </div>
 
         <div class="form-group">
@@ -316,13 +326,23 @@ Yanlışları kontrol et"></textarea>
         </div>
 
         <div class="form-group">
-          <label for="examDate">Tarih</label>
-          <input id="examDate" type="date" required />
+          <label for="examDay">Tarih</label>
+          <input id="examDate" type="hidden" />
+          <div class="date-parts" aria-label="Sınav tarihi">
+            <select id="examDay" aria-label="Gün"></select>
+            <select id="examMonth" aria-label="Ay"></select>
+            <select id="examYear" aria-label="Yıl"></select>
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="examTime">Saat</label>
-          <input id="examTime" type="time" />
+          <label for="examHour">Saat</label>
+          <input id="examTime" type="hidden" />
+          <div class="time-parts" aria-label="Sınav saati">
+            <select id="examHour" aria-label="Saat"></select>
+            <span>:</span>
+            <select id="examMinute" aria-label="Dakika"></select>
+          </div>
         </div>
 
         <button type="submit">Sınav Ekle</button>
@@ -350,7 +370,7 @@ Yanlışları kontrol et"></textarea>
 
     <footer class="footer">
       <p>
-        ExamWeek Planner · Planını düzenle, önceliğini gör, ilerlemeni takip et.
+        ExamWeek Planner v7 · Planını düzenle, önceliğini gör, ilerlemeni takip et.
       </p>
     </footer>
   </main>

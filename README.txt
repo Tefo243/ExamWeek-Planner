@@ -1,4 +1,4 @@
-ExamWeek Planner v6
+ExamWeek Planner v7
 
 Proje özeti:
 Sınav haftasında öğrencilerin görevlerini yalnızca listelemek değil, hangi görevin daha riskli ve acil olduğunu anlamasına yardımcı olmak için hazırlanmış lokal web uygulamasıdır.
@@ -31,3 +31,9 @@ Korunan özellikler:
 
 Not:
 Uygulama hesap ve bulut bağlantısı gerektirmez. Bu, sınıf sunumunda internet sorununa bağlı riskleri azaltır.
+
+
+v7 ek düzeltme:
+- Tarayıcının otomatik mm/dd/yyyy ve AM/PM gösterimini önlemek için tarih/saat alanları özel seçim kutularına dönüştürüldü.
+- Tarih artık gün-ay-yıl sırasıyla seçilir.
+- Saat artık her cihazda 24 saat formatıyla seçilir.

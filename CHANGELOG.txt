@@ -50,3 +50,10 @@ v6:
 - Sınavlar görevlerden ayrı localStorage alanında tutuluyor.
 - Dışa aktarma artık sınav verilerini de içeriyor.
 - Eski v5 görevleri v6 formatına otomatik taşınır.
+
+
+v7:
+- Tarih seçimi tarayıcıya bağlı native date input yerine gün / ay / yıl seçim kutularına çevrildi.
+- Saat seçimi native time input yerine 00-23 saat ve 00-59 dakika seçim kutularına çevrildi.
+- Görev ve sınav tarih/saat alanları aynı şekilde güncellendi.
+- Eski görev ve sınav verileriyle uyum korundu.

@@ -904,3 +904,35 @@ body.panic-mode .app {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* v7 date/time controls: fixed Turkish order and 24-hour clock */
+.date-parts {
+  display: grid;
+  grid-template-columns: 0.8fr 1.35fr 1fr;
+  gap: 8px;
+}
+
+.time-parts {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.time-parts span {
+  color: var(--muted);
+  font-weight: 900;
+  text-align: center;
+}
+
+.date-parts select,
+.time-parts select {
+  min-width: 0;
+}
+
+@media (max-width: 650px) {
+  .date-parts {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
